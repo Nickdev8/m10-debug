@@ -1,10 +1,11 @@
-﻿<?php
+<?php
 
 require_once('./inc/settings.php');
 require_once('./inc/functies.php');
 require_once('./inc/nieuws_functies.php');
 
 
+$siteTitle = 'Log in';
 include_once('./inc/header.php');
 ?>
 

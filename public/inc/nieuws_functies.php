@@ -15,6 +15,7 @@ function haalBerichtOp ( $urlTitel = '' ) {
 		return false;
 	}
 	
+	$urlTitel = mysqli_real_escape_string($mysqli_link, $urlTitel);
 	// haal het bericht uit da database
 	$query = "SELECT p.*, c.id as category_id , c.title as category
 				FROM `post` as p
@@ -44,6 +45,7 @@ function haalBerichtOp ( $urlTitel = '' ) {
 */
 function deleteBericht ( $id = "" ){
 	global $mysqli_link;
+	$id = (int) $id;
 
 	if ( $id == "" && isset($_POST['id']) ) {
 		// niets doen
@@ -77,6 +79,12 @@ function updateBericht ( $id = "" ) {
 	}
 	
 
+	$id = (int) $id;
+	foreach (array('title', 'intro', 'message') as $veld) {
+		$_POST[$veld] = mysqli_real_escape_string($mysqli_link, $_POST[$veld]);
+	}
+	$_POST['category_id'] = (int) $_POST['category_id'];
+
 	// is er een bericht?
 	$query = "SELECT id FROM `post` WHERE `id`='$id' LIMIT 1";
 	$mysqli_result = mysqli_query ( $mysqli_link, $query );
@@ -89,7 +97,7 @@ function updateBericht ( $id = "" ) {
 		// er is een bericht, nu kun je een update doen	
 		
 		$datumtijd	= date( "Y-m-d H:i", strToTime($_POST['publish_date']) );
-		$url 		= urldecode( str_replace(" ", "_", $_POST['title']) );
+		$url 		= mysqli_real_escape_string($mysqli_link, str_replace(" ", "_", stripslashes($_POST['title'])));
 		$res 		= mysqli_query($mysqli_link,
 								"	UPDATE `post`
 									SET `publish_date` 	= '". $datumtijd ."',
@@ -97,31 +105,31 @@ function updateBericht ( $id = "" ) {
 									 	`title` 		= '". $_POST['title'] ."',
 									 	`post_url` 		= '". $url ."',
 									 	`intro` 		= '". $_POST['intro'] ."',
-									 	`message` 		= '". addslashes( $_POST['message'] ) ."'
+										`message` 		= '". $_POST['message'] ."'
 									WHERE id='{$id}' LIMIT 1");
 
 		if ( mysqli_error( $mysqli_link ) ) {
 			echo "updateBericht - EDIT: " . mysqli_error( $mysqli_link );
 			die( );
 		}
-		$res = $url;
+		$res = stripslashes($url);
 		
 	} else {
 		// er is nog geen bericht, maak een nieuwe
 		$user_id 	= 1;
 		$datumtijd	= date( "Y-m-d H:i", strToTime($_POST['publish_date']) );
-		$url 		= urldecode( str_replace(" ", "_", $_POST['title']) );
+		$url 		= mysqli_real_escape_string($mysqli_link, str_replace(" ", "_", stripslashes($_POST['title'])));
 		$res 		= mysqli_query($mysqli_link,
 									"INSERT INTO `post`
-									( `publish_date` , `creation_date` , `title` , `post_url` , `category_id`, `intro` , `message` , `user_id` , `image_source` )
-									VALUES ( '$datumtijd', NOW(), '{$_POST['title']}', '{$url}', '{$_POST['category_id']}', '{$_POST['intro']}', '{$_POST['message']}', '$user_id', '')");
+									( `publish_date` , `creation_date` , `title` , `post_url` , `category_id`, `intro` , `message` , `user_id` , `image_source`, `last_updated` )
+									VALUES ( '$datumtijd', NOW(), '{$_POST['title']}', '{$url}', '{$_POST['category_id']}', '{$_POST['intro']}', '{$_POST['message']}', '$user_id', '', NOW())");
 
 		if ( mysqli_error( $mysqli_link ) ) {
 			echo "updateBericht - ADD: " . mysqli_error( $mysqli_link );
 			die( );
 		}						
 
-		$res = $url;
+		$res = stripslashes($url);
 	}
 	
 	// geef deze array terug
@@ -164,6 +172,9 @@ function getMessages ( $maxMessages = 100 ) {
 	
 	while ( $item = mysqli_fetch_assoc( $mysqli_result ) ) 
 	{
+		$item['title'] = htmlspecialchars($item['title'], ENT_QUOTES, 'UTF-8');
+		$item['intro'] = htmlspecialchars($item['intro'], ENT_QUOTES, 'UTF-8');
+		$item['post_url'] = '/' . rawurlencode($item['post_url']);
 		$out .= "<li>
 			<span class='date'>". strftime("%A, %e %B %Y", strtotime($item['publish_date']) ) ."</span><h3>{$item['title']}</h3>
 			{$item['intro']}<br />";

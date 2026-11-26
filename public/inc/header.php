@@ -3,25 +3,25 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="nl" xml:lang="nl">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title><?php echo $siteTitle; ?></title>
-	<link rel="stylesheet" href="<?php echo SITE_PATH; ?>/main.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<title><?php echo htmlspecialchars($siteTitle, ENT_QUOTES, 'UTF-8'); ?></title>
+	<link rel="stylesheet" href="/main.css" type="text/css" media="screen" title="no title" charset="utf-8">
 </head>
 
 <body>
 <div id="container">
 	<div id="header">	
-		<div id="login"><a href="login.php">Log in</a></div>
+		<div id="login"><a href="/login.php">Log in</a></div>
 
 		<ul id="menu">
 			<li><a href="<?php echo SITE_PATH; ?>">Home</a></li>
-			<li><a href="contact">Contact</a></li>
-			<li><a href="nieuws" class="active">Nieuws</a></li>
+			<li><a href="/contact">Contact</a></li>
+			<li><a href="/nieuws" class="active">Nieuws</a></li>
 			<?php 
 			if ( defined("INGELOGD") && true === INGELOGD ) {
 				// laat het nieuw linkje alleen zien als je niet een nieuwe toevoegd.
 				echo "
 				<li>
-					<a href='". SITE_PATH."new/?mode=new' style='float:right;'>
+					<a href='". SITE_PATH."new?mode=new' style='float:right;'>
 						Nieuw bericht
 					</a>
 				</li>\n";
