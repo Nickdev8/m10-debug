@@ -16,11 +16,11 @@ LOCK TABLES `categories` WRITE;
 
 INSERT INTO `categories` (`id`, `category_id`, `title`)
 VALUES
+	(5,NULL,'sport'),
+	(6,NULL,'weer'),
 	(1,5,'AJAX'),
 	(2,5,'PSV'),
 	(3,5,'AZ'),
-	(5,NULL,'sport'),
-	(6,NULL,'weer'),
 	(7,6,'regen'),
 	(8,6,'zon'),
 	(9,NULL,'Techniek'),

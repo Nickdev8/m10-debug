@@ -17,7 +17,7 @@ function haalBerichtOp ( $urlTitel = '' ) {
 	
 	// haal het bericht uit da database
 	$query = "SELECT p.*, c.id as category_id , c.title as category
-				FROM `posts` as p
+				FROM `post` as p
 				LEFT JOIN categories as c ON c.id = p.category_id
 				WHERE p.post_url='$urlTitel' LIMIT 1";
 	$mysqli_result = mysqli_query ( $mysqli_link, $query );
@@ -50,7 +50,7 @@ function deleteBericht ( $id = "" ){
 		return false;
 	}
 	
-	$query = "DELETE FROM `posts` WHERE `id`='$id' LIMIT 1";
+	$query = "DELETE FROM `post` WHERE `id`='$id' LIMIT 1";
 	$mysqli_result = mysqli_query ( $mysqli_link, $query );
 	if ( mysqli_error( $mysqli_link ) ) {
 		echo "deleteBericht: " . mysqli_error( $mysqli_link );
@@ -78,7 +78,7 @@ function updateBericht ( $id = "" ) {
 	
 
 	// is er een bericht?
-	$query = "SELECT id FROM `posts` WHERE `id`='$id' LIMIT 1";
+	$query = "SELECT id FROM `post` WHERE `id`='$id' LIMIT 1";
 	$mysqli_result = mysqli_query ( $mysqli_link, $query );
 	if ( mysqli_error( $mysqli_link ) ) {
 		echo "updateBericht: " . mysqli_error( $mysqli_link );
@@ -91,7 +91,7 @@ function updateBericht ( $id = "" ) {
 		$datumtijd	= date( "Y-m-d H:i", strToTime($_POST['publish_date']) );
 		$url 		= urldecode( str_replace(" ", "_", $_POST['title']) );
 		$res 		= mysqli_query($mysqli_link,
-								"	UPDATE `posts`
+								"	UPDATE `post`
 									SET `publish_date` 	= '". $datumtijd ."',
 									 	`category_id` 	= '". $_POST['category_id'] ."',
 									 	`title` 		= '". $_POST['title'] ."',
@@ -112,7 +112,7 @@ function updateBericht ( $id = "" ) {
 		$datumtijd	= date( "Y-m-d H:i", strToTime($_POST['publish_date']) );
 		$url 		= urldecode( str_replace(" ", "_", $_POST['title']) );
 		$res 		= mysqli_query($mysqli_link,
-									"INSERT INTO `posts`
+									"INSERT INTO `post`
 									( `publish_date` , `creation_date` , `title` , `post_url` , `category_id`, `intro` , `message` , `user_id` , `image_source` )
 									VALUES ( '$datumtijd', NOW(), '{$_POST['title']}', '{$url}', '{$_POST['category_id']}', '{$_POST['intro']}', '{$_POST['message']}', '$user_id', '')");
 
@@ -153,7 +153,7 @@ function getMessages ( $maxMessages = 100 ) {
 	
 	// haal de berichten op uit de databse
 	$query = "	SELECT p.*, c.id as category_id , c.title as category
-				FROM `posts` as p
+				FROM `post` as p
 				LEFT JOIN categories as c ON c.id = p.category_id
 				ORDER BY p.publish_date DESC LIMIT $maxMessages";
 	$mysqli_result = mysqli_query ( $mysqli_link, $query );

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 setlocale(LC_TIME, "nl_NL");
 date_default_timezone_set('Europe/Amsterdam');
 
@@ -15,12 +15,12 @@ switch( $_SERVER['HTTP_HOST'] ) {
 				    define('DEBUG', 		false);
 				break;
 				
-	case 'news' :
-					define( 'DB_USERNAMEE',	'root' );
-					define( 'DB_PASSWORD',	'root' );
-					define( 'DB_DATABASE',	'cmm_2016' );
-					define( 'DB_HOST', 		'localhost' );
-				    define('SITE_PATH', 	'http://news/');
+	case 'localhost' :
+					define('DB_USERNAME', 'news');
+					define('DB_PASSWORD', 'news');
+					define('DB_DATABASE', 'cmm_2016');
+					define('DB_HOST', 'mariadb');
+					define('SITE_PATH', 'http://localhost/');
 				    define('SITE_NAME', 	'Nieuwsberichten systeem');
 				    define('DEBUG', 		true);
 				break;
